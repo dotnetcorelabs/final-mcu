@@ -1,0 +1,62 @@
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardMedia from '@material-ui/core/CardMedia';
+import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import ShareIcon from '@material-ui/icons/Share';
+import { red } from '@material-ui/core/colors';
+
+const useStyles = makeStyles({
+    card: {
+      maxWidth: 345,
+    },
+    media: {
+      height: 140,
+    },
+    description: {
+        height: 40
+    }
+  });
+
+export default function CharacterCard({character}) {
+    const classes = useStyles();
+
+    function getFirstLetter(name) {
+        return name[0].toUpperCase();
+    }
+
+    return (
+        <Card className={classes.card}>
+            {/* <CardActionArea> */}
+                <CardMedia
+                    className={classes.media}
+                    image={character.thumbnail.fullPath}
+                    title={character.name}
+                />
+                <CardContent>
+                    <Typography gutterBottom variant="h5" component="h2">
+                    {character.name}
+                    </Typography>
+                    <div className={classes.description}>
+                        <Typography variant="body2" color="textSecondary" component="p">
+                        {character.shortDescription}
+                        </Typography>
+                    </div>
+                </CardContent>
+            {/* </CardActionArea> */}
+            <CardActions disableSpacing>
+                <IconButton aria-label="add to favorites">
+                    <FavoriteIcon color="disabled" />
+                </IconButton>
+                <IconButton aria-label="share">
+                    <ShareIcon />
+                </IconButton>
+            </CardActions>
+        </Card>
+    );
+  }

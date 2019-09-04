@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using MarvelCharacters.Api.Services;
+using MarvelCharacters.Api.Services.Http.Marvel;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -31,7 +33,16 @@ namespace MarvelCharacters.Api
 
             services.AddOptions();
 
-            services.AddMediatR(Assembly.GetExecutingAssembly());
+            services.Configure<MarvelApiOptions>(opts =>
+            {
+                opts.PublicKey = Configuration["MarvelApi:PublicKey"];
+                opts.PrivateKey = Configuration["MarvelApi:PrivateKey"];
+                opts.Uri = Configuration["MarvelApi:Uri"];
+            });
+
+            services.AddHttpClient<HttpMarvelApi>();
+
+            services.AddScoped<IMarvelService>(ctx => ctx.GetRequiredService<HttpMarvelApi>());
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
         }

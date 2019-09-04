@@ -3,18 +3,29 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <UserSecretsId>ffc22a42-8a79-4f07-bded-90ce792cb418</UserSecretsId>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Commands\**" />
+    <Compile Remove="Queries\**" />
+    <Compile Remove="RequestHandlers\**" />
+    <Content Remove="Commands\**" />
+    <Content Remove="Queries\**" />
+    <Content Remove="RequestHandlers\**" />
+    <EmbeddedResource Remove="Commands\**" />
+    <EmbeddedResource Remove="Queries\**" />
+    <EmbeddedResource Remove="RequestHandlers\**" />
+    <None Remove="Commands\**" />
+    <None Remove="Queries\**" />
+    <None Remove="RequestHandlers\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="MediatR" Version="7.0.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Commands\" />
-    <Folder Include="RequestHandlers\" />
-    <Folder Include="Queries\" />
   </ItemGroup>
 
 </Project>

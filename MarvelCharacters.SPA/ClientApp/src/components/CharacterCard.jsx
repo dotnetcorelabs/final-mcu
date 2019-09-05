@@ -20,8 +20,15 @@ const useStyles = makeStyles({
     },
     description: {
         height: 40
+    },
+    header: {
+        height: 110
+    },
+    cardContent: {
+        height: 130
     }
   });
+  
 
 export default function CharacterCard({character}) {
     const classes = useStyles();
@@ -38,15 +45,13 @@ export default function CharacterCard({character}) {
                     image={character.thumbnail.fullPath}
                     title={character.name}
                 />
-                <CardContent>
+                <CardContent classes={{root: classes.cardContent}}>
                     <Typography gutterBottom variant="h5" component="h2">
                     {character.name}
                     </Typography>
-                    <div className={classes.description}>
-                        <Typography variant="body2" color="textSecondary" component="p">
-                        {character.shortDescription}
-                        </Typography>
-                    </div>
+                    <Typography variant="body2" color="textSecondary" component="p">
+                    {character.shortDescription}
+                    </Typography>
                 </CardContent>
             {/* </CardActionArea> */}
             <CardActions disableSpacing>

@@ -10,6 +10,8 @@ namespace MarvelCharacters.Api.Services
 {
     public interface IMarvelService
     {
-        Task<IReadOnlyList<Character>> GetCharacters(string searchString = null, int page = 0, CancellationToken cancellationToken = default);
+        Task<IReadOnlyList<Character>> GetCharacters(string searchString = null, int limit = 10, CancellationToken cancellationToken = default);
+
+        Task<IReadOnlyList<Comic>> GetComics(string searchString = null, int limit = 10, CancellationToken cancellationToken = default);
     }
 }

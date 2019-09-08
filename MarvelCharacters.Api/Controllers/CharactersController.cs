@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using MarvelCharacters.Api.Infrastructure;
 using MarvelCharacters.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -26,7 +27,7 @@ namespace MarvelCharacters.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> Index([FromQuery]string searchString, CancellationToken cancellationToken = default)
         {
-            _logger.LogInformation("Getting marvel characters with searchString {SearchString}", searchString);
+            _logger.LogInformation(LoggingEvents.API_CHARACTERS, "Getting marvel characters with searchString {SearchString}", searchString);
 
             var data = await _marvelService.GetCharacters(searchString, cancellationToken: cancellationToken);
             return Ok(data);

@@ -1,17 +1,17 @@
-﻿using System;
+﻿using MarvelCharacters.Api.Infrastructure;
+using MarvelCharacters.Api.Models;
+using MarvelCharacters.Api.Services.Http.Marvel.Models;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using MarvelCharacters.Api.Models;
-using MarvelCharacters.Api.Services.Http.Marvel.Models;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 
 namespace MarvelCharacters.Api.Services.Http.Marvel
 {
@@ -65,27 +65,81 @@ namespace MarvelCharacters.Api.Services.Http.Marvel
         }
         #endregion
 
-        /// <inheritdoc />
-        public async Task<IReadOnlyList<Character>> GetCharacters(string searchString = null, int page = 0, CancellationToken cancellationToken = default)
+        public async Task<IReadOnlyList<Character>> GetCharacters(string searchString = "", int limit = 10, CancellationToken cancellationToken = default)
         {
+            _logger.LogInformation(LoggingEvents.MV_API_CHARACTERS, "Getting characters with SearchString {SEARCH_STRING} and limit {LIMIT}", searchString, limit);
+
             string authorizationQuery = GetAuthorizationString(_marvelApiOptions, 1);
 
-            string uri = $"/v1/public/characters?nameStartsWith={searchString}&limit=10&{authorizationQuery}";
+            _logger.LogInformation(LoggingEvents.MV_API_CHARACTERS, "Authorization token generated");
+
+            string uri = $"/v1/public/characters?limit={limit}&{authorizationQuery}";
+
+            if (!string.IsNullOrEmpty(searchString))
+                uri += $"&nameStartsWith={searchString}";
 
             using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, uri))
             {
                 request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                var responseStream = await _client.SendAsync(request, cancellationToken);
-
-                if (responseStream.IsSuccessStatusCode)
+                try
                 {
-                    var responseText = await responseStream.Content.ReadAsStringAsync();
-                    var response = JsonConvert.DeserializeObject<ServiceResult<Character>>(responseText);
+                    var responseStream = await _client.SendAsync(request, cancellationToken);
 
-                    return response.Data.Results;
+                    if (responseStream.IsSuccessStatusCode)
+                    {
+                        var responseText = await responseStream.Content.ReadAsStringAsync();
+                        var response = JsonConvert.DeserializeObject<ServiceResult<Character>>(responseText);
+
+                        return response.Data.Results;
+                    }
+                    _logger.LogWarning(LoggingEvents.MV_API_CHARACTERS, "Status code response different from success. status code {STATUS_CODE}", responseStream.StatusCode);
+                    return Array.Empty<Character>();
                 }
-                throw new Exception("Error when trying to get marvel characters");
+                catch (Exception ex)
+                {
+                    _logger.LogError(LoggingEvents.MV_API_CHARACTERS, ex, "Error when trying to get Marvel Characters from api with SearchString {SEARCH_STRING} and limit {LIMIT}", searchString, limit);
+                    throw;
+                }
+            }
+        }
+
+        public async Task<IReadOnlyList<Comic>> GetComics(string searchString = null, int limit = 10, CancellationToken cancellationToken = default)
+        {
+            _logger.LogInformation(LoggingEvents.MV_API_COMICS, "Getting Comics with SearchString {SEARCH_STRING} and limit {LIMIT}", searchString, limit);
+
+            string authorizationQuery = GetAuthorizationString(_marvelApiOptions, 1);
+
+            _logger.LogInformation(LoggingEvents.MV_API_COMICS, "Authorization token generated");
+
+            string uri = $"/v1/public/comics?limit={limit}&{authorizationQuery}";
+
+            if (!string.IsNullOrEmpty(searchString))
+                uri += $"&titleStartsWith={searchString}";
+
+            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, uri))
+            {
+                request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                try
+                {
+                    var responseStream = await _client.SendAsync(request, cancellationToken);
+
+                    if (responseStream.IsSuccessStatusCode)
+                    {
+                        var responseText = await responseStream.Content.ReadAsStringAsync();
+                        var response = JsonConvert.DeserializeObject<ServiceResult<Comic>>(responseText);
+
+                        return response.Data.Results;
+                    }
+                    _logger.LogWarning(LoggingEvents.MV_API_COMICS, "Status code response different from success. status code {STATUS_CODE}", responseStream.StatusCode);
+                    return Array.Empty<Comic>();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(LoggingEvents.MV_API_COMICS, ex, "Error when trying to getting marvel Comics from API with SearchString {SEARCH_STRING} and limit {LIMIT}", searchString, limit);
+                    throw;
+                }
             }
         }
     }

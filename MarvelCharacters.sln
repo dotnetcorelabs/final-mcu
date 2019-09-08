@@ -7,9 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarvelCharacters.SPA", "Mar
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{FE3BE3AE-DD47-440C-B6B3-D2617AA3D4B6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarvelCharacters.Domain", "MarvelCharacters.Domain\MarvelCharacters.Domain.csproj", "{56A95298-A400-43C9-AAB4-F5345A90F7B7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarvelCharacters.Api", "MarvelCharacters.Api\MarvelCharacters.Api.csproj", "{5AFCAAEC-A868-4B99-8141-4041049505A1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarvelCharacters.Api", "MarvelCharacters.Api\MarvelCharacters.Api.csproj", "{5AFCAAEC-A868-4B99-8141-4041049505A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +19,6 @@ Global
 		{AC2BDACB-5773-4D98-883C-5262772B70BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC2BDACB-5773-4D98-883C-5262772B70BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC2BDACB-5773-4D98-883C-5262772B70BA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{56A95298-A400-43C9-AAB4-F5345A90F7B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{56A95298-A400-43C9-AAB4-F5345A90F7B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{56A95298-A400-43C9-AAB4-F5345A90F7B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{56A95298-A400-43C9-AAB4-F5345A90F7B7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5AFCAAEC-A868-4B99-8141-4041049505A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5AFCAAEC-A868-4B99-8141-4041049505A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5AFCAAEC-A868-4B99-8141-4041049505A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -35,7 +29,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{AC2BDACB-5773-4D98-883C-5262772B70BA} = {FE3BE3AE-DD47-440C-B6B3-D2617AA3D4B6}
-		{56A95298-A400-43C9-AAB4-F5345A90F7B7} = {FE3BE3AE-DD47-440C-B6B3-D2617AA3D4B6}
 		{5AFCAAEC-A868-4B99-8141-4041049505A1} = {FE3BE3AE-DD47-440C-B6B3-D2617AA3D4B6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution

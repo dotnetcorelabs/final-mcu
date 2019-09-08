@@ -5,7 +5,7 @@ function getShortDescription(description) {
     return description.substring(0, 36);
 }
 
-export const CharacterFactory = ({
+export const ComicFactory = ({
     id = '',
     name = '',
     description = '',
@@ -20,7 +20,7 @@ export const CharacterFactory = ({
     thumbnail: ThumbnailFactory(thumbnail)
 });
 
-export const characterPropTypesSchema = t.shape({
+export const comicsPropTypesSchema = t.shape({
     id: t.string.isRequired,
     name: t.string.isRequired,
     description: t.string,

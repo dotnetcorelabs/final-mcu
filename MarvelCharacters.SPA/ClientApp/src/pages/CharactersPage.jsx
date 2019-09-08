@@ -14,24 +14,32 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function HomePage() {
+export default function CharactersPage(props) {
   const [characters, setcharacters] = useState([]);
 
   useEffect(() => {
     async function loadCharacters() {
-      const response = await api.get('/api/characters?searchString=Spider')
-      const data = response.data;
-      setcharacters(data.map(item => CharacterFactory(item)))
+      try
+      {
+        const response = await api.get(`/api/characters?searchString=${props.searchString}`)
+        const data = response.data;
+        const charsColl = data.map(item => CharacterFactory(item));
+        setcharacters(charsColl);
+      }
+      catch(error)
+      {
+        console.log(error);
+      }
     }
     loadCharacters();
-  })
+  }, [props.searchString]);
 
   const classes = useStyles();
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
         {characters.length > 0 && characters.map((tile, index) => (
-          <Grid item xs={2}>
+          <Grid item xs={2} key={index}>
             <CharacterCard character={tile} />
           </Grid>
         ))}
@@ -39,3 +47,4 @@ export default function HomePage() {
     </div>
   );
 }
+

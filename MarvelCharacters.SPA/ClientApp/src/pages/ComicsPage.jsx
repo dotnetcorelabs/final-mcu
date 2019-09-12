@@ -17,21 +17,35 @@ const useStyles = makeStyles(theme => ({
 export default function ComicsPage(props) {
   const [comics, setComics] = useState([]);
 
-  useEffect(() => {
-    async function loadComics() {
-      try
-      {
-        const response = await api.get(`/api/comics?searchString=${props.searchString}`)
-        const data = response.data;
-        const comicsColl = data.map(item => ComicFactory(item));
-        setComics(comicsColl);
-      }
-      catch(error)
-      {
-        console.log(error);
-      }
+  async function handleLike(comic) {
+    if(comic.liked)
+      await api.delete(`/api/comics/${comic.id}/likes`, { "Accept": "application/json", "Content-Type": "application/json" });
+    else
+      await api.post(`/api/comics/${comic.id}/likes`, comic, { "Accept": "application/json", "Content-Type": "application/json" });
+
+    await loadComics();
+  }
+
+  async function loadComics() {
+    try
+    {
+      const response = await api.get(`/api/comics?searchString=${props.searchString}`)
+      const data = response.data;
+      const comicsColl = data.map(item => ComicFactory(item));
+      setComics(comicsColl);
     }
-    loadComics();
+    catch(error)
+    {
+      console.log(error);
+    }
+  }
+
+  function handleShare(comic) {
+    alert('nada implementado aqui');
+  }
+
+  useEffect(async () => {
+    await loadComics();
   }, [props.searchString]);
 
   const classes = useStyles();
@@ -40,7 +54,7 @@ export default function ComicsPage(props) {
       <Grid container spacing={3}>
         {comics.length > 0 && comics.map((tile, index) => (
           <Grid item xs={2} key={index}>
-            <ComicCard character={tile} />
+            <ComicCard comic={tile} onLike={handleLike} onShare={handleShare} />
           </Grid>
         ))}
       </Grid>

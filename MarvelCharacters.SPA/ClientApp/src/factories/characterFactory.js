@@ -2,7 +2,9 @@ import t from 'prop-types';
 import { ThumbnailFactory, thumbnailPropTypesSchema } from './thumbnailFactory';
 
 function getShortDescription(description) {
-    return description.substring(0, 36);
+    if(description)
+        return description.substring(0, 36);
+    return '';
 }
 
 export const CharacterFactory = ({

@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 
 import { makeStyles, fade } from '@material-ui/core/styles';
+
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Drawer from '@material-ui/core/Drawer';
+
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -15,6 +21,9 @@ import CharactersPage from './pages/CharactersPage';
 import ComicsPage from './pages/ComicsPage';
 
 const useStyles = makeStyles(theme => ({
+  list: {
+    width: 250,
+  },
   root: {
     flexGrow: 1,
   },
@@ -70,18 +79,52 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+function SideMenu({ classes, onSelected }) {
+  return (
+    <div
+      className={classes.list}
+      role="presentation"
+    >
+      <List>
+        <ListItem button onClick={() => onSelected('characters')}>
+          <ListItemText primary='Personagens' />
+        </ListItem>
+        <ListItem button onClick={() => onSelected('comics')}>
+          <ListItemText primary='Revistas' />
+        </ListItem>
+      </List>
+    </div>
+  );
+}
+
 function App() {
   const classes = useStyles();
   const [searchString, setSearchString] = useState('');
+  const [currentPage, setCurrentPage] = useState('characters');
+  const [openDrawer, setOpenDrawer] = useState('');
 
   function handleSearch(event) {
     setSearchString(event.target.value);
   }
+
+  function handleMenuClick(page) {
+    setCurrentPage(page)
+    setOpenDrawer(false)
+  }
+
+  function toggleDrawer(open) {
+    setOpenDrawer(open)
+  }
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar variant="dense">
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+          <IconButton edge="start" 
+              className={classes.menuButton} 
+              color="inherit" 
+              aria-label="menu"
+              onClick={() => toggleDrawer(true)}>
             <MenuIcon />
           </IconButton>
           <Typography className={classes.title} variant="h6" noWrap>
@@ -106,9 +149,14 @@ function App() {
       </AppBar>
       <Paper elevation={0} className={classes.paper}>
         <Container maxWidth="lg">
-          <CharactersPage searchString={searchString} />
+          {currentPage == 'characters' && <CharactersPage searchString={searchString} />}
+          {currentPage == 'comics' && <ComicsPage searchString={searchString} />}
         </Container>
       </Paper>
+
+      <Drawer open={openDrawer} onClose={() => toggleDrawer(false)}>
+        <SideMenu onSelected={handleMenuClick} classes={classes} />
+      </Drawer>
     </div>
   );
 }

@@ -30,35 +30,31 @@ const useStyles = makeStyles({
   });
   
 
-export default function ComicCard({character}) {
+export default function ComicCard({comic, onLike, onShare}) {
     const classes = useStyles();
-
-    function getFirstLetter(name) {
-        return name[0].toUpperCase();
-    }
 
     return (
         <Card className={classes.card}>
             {/* <CardActionArea> */}
                 <CardMedia
                     className={classes.media}
-                    image={character.thumbnail.fullPath}
-                    title={character.name}
+                    image={comic.thumbnail.fullPath}
+                    title={comic.title}
                 />
                 <CardContent classes={{root: classes.cardContent}}>
                     <Typography gutterBottom variant="h5" component="h2">
-                    {character.name}
+                    {comic.title}
                     </Typography>
                     <Typography variant="body2" color="textSecondary" component="p">
-                    {character.shortDescription}
+                    {comic.shortDescription}
                     </Typography>
                 </CardContent>
             {/* </CardActionArea> */}
             <CardActions disableSpacing>
-                <IconButton aria-label="add to favorites">
-                    <FavoriteIcon color="disabled" />
+                <IconButton aria-label="add to favorites" onClick={() => onLike(comic)}>
+                    <FavoriteIcon color={comic.liked ? "disabled" : "secondary"} />
                 </IconButton>
-                <IconButton aria-label="share">
+                <IconButton aria-label="share" onClick={() => onShare(comic)}>
                     <ShareIcon />
                 </IconButton>
             </CardActions>

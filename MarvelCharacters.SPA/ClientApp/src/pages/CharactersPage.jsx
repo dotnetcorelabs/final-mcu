@@ -17,20 +17,34 @@ const useStyles = makeStyles(theme => ({
 export default function CharactersPage(props) {
   const [characters, setcharacters] = useState([]);
 
-  useEffect(() => {
-    async function loadCharacters() {
-      try
-      {
-        const response = await api.get(`/api/characters?searchString=${props.searchString}`)
-        const data = response.data;
-        const charsColl = data.map(item => CharacterFactory(item));
-        setcharacters(charsColl);
-      }
-      catch(error)
-      {
-        console.log(error);
-      }
+  async function handleLike(character) {
+    if(character.liked)
+      await api.delete(`/api/characters/${character.id}/likes`, { "Accept": "application/json", "Content-Type": "application/json" });
+    else
+      await api.post(`/api/characters/${character.id}/likes`, character, { "Accept": "application/json", "Content-Type": "application/json" });
+
+    await loadCharacters();
+  }
+
+  function handleShare(character) {
+    alert('nada implementado aqui');
+  }
+
+  async function loadCharacters() {
+    try
+    {
+      const response = await api.get(`/api/characters?searchString=${props.searchString}`)
+      const data = response.data;
+      const charsColl = data.map(item => CharacterFactory(item));
+      setcharacters(charsColl);
     }
+    catch(error)
+    {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
     loadCharacters();
   }, [props.searchString]);
 
@@ -40,7 +54,7 @@ export default function CharactersPage(props) {
       <Grid container spacing={3}>
         {characters.length > 0 && characters.map((tile, index) => (
           <Grid item xs={2} key={index}>
-            <CharacterCard character={tile} />
+            <CharacterCard character={tile} onLike={handleLike} onShare={handleShare} />
           </Grid>
         ))}
       </Grid>

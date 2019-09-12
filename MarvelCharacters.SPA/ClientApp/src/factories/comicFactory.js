@@ -10,14 +10,16 @@ export const ComicFactory = ({
     name = '',
     description = '',
     resourceURI = '',
-    thumbnail = ThumbnailFactory({})
+    thumbnail = ThumbnailFactory({}),
+    liked = false
 } = {}) => ({
     id: id,
     name: name,
     description: description,
     shortDescription: getShortDescription(description),
     resourceURI: resourceURI,
-    thumbnail: ThumbnailFactory(thumbnail)
+    thumbnail: ThumbnailFactory(thumbnail),
+    liked: liked
 });
 
 export const comicsPropTypesSchema = t.shape({

@@ -8,7 +8,7 @@ using MarvelCharacters.Api.Models;
 
 namespace MarvelCharacters.Api.Services
 {
-    public interface IMarvelService
+    public interface IMarvelHttpService
     {
         Task<IReadOnlyList<Character>> GetCharacters(string searchString = null, int limit = 10, CancellationToken cancellationToken = default);
 

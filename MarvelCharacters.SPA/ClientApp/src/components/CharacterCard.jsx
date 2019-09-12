@@ -30,12 +30,8 @@ const useStyles = makeStyles({
   });
   
 
-export default function CharacterCard({character}) {
+export default function CharacterCard({character, onLike, onShare}) {
     const classes = useStyles();
-
-    function getFirstLetter(name) {
-        return name[0].toUpperCase();
-    }
 
     return (
         <Card className={classes.card}>
@@ -55,10 +51,10 @@ export default function CharacterCard({character}) {
                 </CardContent>
             {/* </CardActionArea> */}
             <CardActions disableSpacing>
-                <IconButton aria-label="add to favorites">
-                    <FavoriteIcon color="disabled" />
+                <IconButton aria-label="add to favorites" onClick={() => onLike(character)}>
+                    <FavoriteIcon color={character.liked ? "disabled" : "secondary"} />
                 </IconButton>
-                <IconButton aria-label="share">
+                <IconButton aria-label="share" onClick={() => onShare(character)}>
                     <ShareIcon />
                 </IconButton>
             </CardActions>

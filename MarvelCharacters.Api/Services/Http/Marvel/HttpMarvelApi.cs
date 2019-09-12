@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace MarvelCharacters.Api.Services.Http.Marvel
 {
-    public class HttpMarvelApi : IMarvelService
+    public class HttpMarvelApi : IMarvelHttpService
     {
         private readonly MarvelApiOptions _marvelApiOptions;
 

@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
+﻿using MarvelCharacters.Api.Models;
 using MarvelCharacters.Api.Services;
+using MarvelCharacters.Api.Services.Db;
 using MarvelCharacters.Api.Services.Http.Marvel;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.IdGenerators;
 
 namespace MarvelCharacters.Api
 {
@@ -42,7 +37,22 @@ namespace MarvelCharacters.Api
 
             services.AddHttpClient<HttpMarvelApi>();
 
-            services.AddScoped<IMarvelService>(ctx => ctx.GetRequiredService<HttpMarvelApi>());
+            services.AddScoped<IMarvelHttpService>(ctx => ctx.GetRequiredService<HttpMarvelApi>());
+
+            services.AddScoped<IMarvelDatabaseService, MongoDatabase>();
+            
+            //configuring options for MongoDb
+            services.Configure<MongoDbOptions>(opts =>
+            {
+                opts.ConnectionString = Configuration["MongoDb:ConnectionString"];
+                opts.Database = Configuration["MongoDb:Database"];
+            });
+            //adding MongoDb mapping
+            BsonClassMap.RegisterClassMap<Character>(cm =>
+            {
+                cm.MapProperty(x => x.Name).SetIgnoreIfNull(true);
+                cm.MapIdProperty(x => x.Id);
+            });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
         }

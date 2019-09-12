@@ -17,5 +17,7 @@ namespace MarvelCharacters.Api.Models
         public string ResourceURI { get; set; }
 
         public Thumbnail Thumbnail { get; set; }
+
+        public bool Liked { get; set; }
     }
 }

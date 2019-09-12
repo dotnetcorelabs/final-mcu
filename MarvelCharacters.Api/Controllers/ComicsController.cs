@@ -16,9 +16,9 @@ namespace MarvelCharacters.Api.Controllers
     {
         private readonly ILogger<ComicsController> _logger;
 
-        private readonly IMarvelService _marvelService;
+        private readonly IMarvelHttpService _marvelService;
 
-        public ComicsController(ILogger<ComicsController> logger, IMarvelService marvelService)
+        public ComicsController(ILogger<ComicsController> logger, IMarvelHttpService marvelService)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _marvelService = marvelService ?? throw new ArgumentNullException(nameof(marvelService));

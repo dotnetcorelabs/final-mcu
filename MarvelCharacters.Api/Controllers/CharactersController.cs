@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using MarvelCharacters.Api.Infrastructure;
+﻿using MarvelCharacters.Api.Infrastructure;
 using MarvelCharacters.Api.Models;
 using MarvelCharacters.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MarvelCharacters.Api.Controllers
 {

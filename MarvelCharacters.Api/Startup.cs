@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.IdGenerators;
 
 namespace MarvelCharacters.Api
 {
@@ -54,6 +53,16 @@ namespace MarvelCharacters.Api
                 cm.MapIdProperty(x => x.Id);
             });
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info()
+                {
+                    Title = "MarvelCharacters",
+                    Version = "v1",
+                    Description = "Marvel Characters API for case study only"
+                });
+            });
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
         }
 
@@ -69,6 +78,16 @@ namespace MarvelCharacters.Api
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
 
             app.UseCors(c =>
             {

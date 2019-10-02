@@ -9,21 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Commands\**" />
-    <Compile Remove="Queries\**" />
-    <Compile Remove="RequestHandlers\**" />
-    <Content Remove="Commands\**" />
-    <Content Remove="Queries\**" />
-    <Content Remove="RequestHandlers\**" />
-    <EmbeddedResource Remove="Commands\**" />
-    <EmbeddedResource Remove="Queries\**" />
-    <EmbeddedResource Remove="RequestHandlers\**" />
-    <None Remove="Commands\**" />
-    <None Remove="Queries\**" />
-    <None Remove="RequestHandlers\**" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="AspNetCore.HealthChecks.MongoDb" Version="2.2.3" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI" Version="2.2.35" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="MediatR" Version="7.0.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />

@@ -1,12 +1,17 @@
-﻿using MarvelCharacters.Api.Models;
+﻿using System;
+using HealthChecks.UI.Client;
+using MarvelCharacters.Api.Models;
 using MarvelCharacters.Api.Services;
 using MarvelCharacters.Api.Services.Db;
 using MarvelCharacters.Api.Services.Http.Marvel;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Options;
 using MongoDB.Bson.Serialization;
 
 namespace MarvelCharacters.Api
@@ -39,7 +44,7 @@ namespace MarvelCharacters.Api
             services.AddScoped<IMarvelHttpService>(ctx => ctx.GetRequiredService<HttpMarvelApi>());
 
             services.AddScoped<IMarvelDatabaseService, MongoDatabase>();
-            
+
             //configuring options for MongoDb
             services.Configure<MongoDbOptions>(opts =>
             {
@@ -63,7 +68,26 @@ namespace MarvelCharacters.Api
                 });
             });
 
+            AddHealthChecks(services);
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
+        }
+
+        private void AddHealthChecks(IServiceCollection services)
+        {
+            using (var sp = services.BuildServiceProvider(false))
+            {
+                var mongoOpts = sp.GetRequiredService<IOptions<MongoDbOptions>>()
+                    .Value;
+
+                services.AddHealthChecks()
+                    .AddMongoDb(mongodbConnectionString: mongoOpts.ConnectionString,
+                                name: "mongo",
+                                failureStatus: HealthStatus.Unhealthy);
+            }
+
+            //adding health check UI services
+            services.AddHealthChecksUI();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -79,15 +103,7 @@ namespace MarvelCharacters.Api
                 app.UseHsts();
             }
 
-            // Enable middleware to serve generated Swagger as a JSON endpoint.
-            app.UseSwagger();
-
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
-            // specifying the Swagger JSON endpoint.
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Marvel API");
-            });
+            ConfigureInfraEndpoints(app, env);
 
             app.UseCors(c =>
             {
@@ -98,6 +114,32 @@ namespace MarvelCharacters.Api
 
             app.UseHttpsRedirection();
             app.UseMvc();
+        }
+
+        private void ConfigureInfraEndpoints(IApplicationBuilder app, IHostingEnvironment env)
+        {
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Marvel API");
+            });
+
+            //adding health check endpoint
+            app.UseHealthChecks("/healthcheck");
+
+            //adding health check point used by the UI
+            app.UseHealthChecks("/healthz", new HealthCheckOptions()
+            {
+                Predicate = _ => true,
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+            });
+
+            //adding health check UI
+            app.UseHealthChecksUI();
         }
     }
 }

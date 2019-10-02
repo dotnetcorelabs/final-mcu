@@ -1,0 +1,27 @@
+﻿FROM mcr.microsoft.com/dotnet/core/aspnet:2.2-stretch-slim AS base
+WORKDIR /app
+EXPOSE 80
+
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2-stretch AS build
+WORKDIR /src
+COPY . .
+RUN dotnet restore "MarvelCharacters.SPA.csproj"
+
+RUN apt-get update -yq && apt-get upgrade -yq && apt-get install -yq curl git nano
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && apt-get install -yq nodejs build-essential
+RUN npm install -g npm
+
+RUN dotnet build "MarvelCharacters.SPA.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "MarvelCharacters.SPA.csproj" -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+#ENTRYPOINT ["dotnet", "MarvelCharacters.SPA.dll"]
+
+CMD export ASPNETCORE_URLS=http://*:$PORT
+RUN echo 'we are running some # of cool things'
+
+CMD ASPNETCORE_URLS=http://*:$PORT dotnet MarvelCharacters.SPA.dll

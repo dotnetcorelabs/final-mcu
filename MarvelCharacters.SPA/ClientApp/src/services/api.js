@@ -5,7 +5,7 @@ export const headerFactory = (token) => {
 }
 
 const api = axios.create({
-  baseURL: 'http://localhost:9000'
+    baseURL: 'https://rmauro-marvel-api.herokuapp.com'
 });
 
 export default api;
